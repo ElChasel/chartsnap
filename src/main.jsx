@@ -1,3 +1,4 @@
+import {AnalyticsStatus} from './brand.jsx';
 import React, { useEffect, useState, useRef, useMemo } from "react";
 import DataWorker from './worker.js?worker';
 import * as echarts from "echarts";
@@ -203,6 +204,7 @@ function App() {
     studioWas.current = studio;
   }, [studio]);
   const update = (k, v) => {
+    if (["plotSelection","fitSelection","viewZoom"].includes(k) && JSON.stringify(settings[k]) !== JSON.stringify(v)) track("data_range_adjusted",{scope:k === "plotSelection"?"plot":k === "fitSelection"?"fit":"viewport"});
     if (k === "type" && v !== settings.type)
       track("chart_type_changed", { chart_type: v });
     if (
@@ -435,6 +437,7 @@ function App() {
     chart.current = echarts.init(chartRef.current, null, { renderer: "svg" });
     chart.current.on("datazoom", () => {
       const z = chart.current?.getOption().dataZoom?.[0];
+      if(z)track("data_range_adjusted",{scope:"viewport"});
       if(z)setSettings(s=>s.viewZoom?.start===z.start&&s.viewZoom?.end===z.end?s:{...s,viewZoom:{start:z.start,end:z.end}});
       if (z && chartRef.current) {
         chartRef.current.dataset.zoomStart = String(z.start);
@@ -1123,7 +1126,7 @@ function App() {
             <button onClick={() => setAbout(true)}>
               Made by <StudioWordmark />
             </button>
-            <button onClick={() => setConsent("unset")}>隐私设置</button>
+            <button onClick={() => setConsent("unset")}>隐私设置</button><AnalyticsStatus/>
             <a href={sitePath('/privacy')}>隐私政策</a>
             <span>© 2026 611 Studio. ChartSnap.</span>
           </footer>
@@ -1917,7 +1920,7 @@ function App() {
               <button onClick={() => setAbout(true)}>
                 Made by <StudioWordmark />
               </button>
-              <button onClick={() => setConsent("unset")}>隐私设置</button>
+              <button onClick={() => setConsent("unset")}>隐私设置</button><AnalyticsStatus/>
               <span>从原始数据到专业洞察，一步完成。</span>
               <span>v6.0 · 611 Studio</span>
             </div>

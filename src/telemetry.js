@@ -1,3 +1,4 @@
+import {pagesAnalytics} from './pages-analytics.js';
 import {STATIC_BUILD} from './runtime.js';
 const KEY = "chartsnap.analytics.consent.v1";
 let enabled = false,
@@ -8,6 +9,7 @@ let enabled = false,
   lastSession = 0,
   session = null;
 export function consentState() {
+  if(STATIC_BUILD) return pagesAnalytics.consentState();
   try {
     return localStorage.getItem(KEY) || "unset";
   } catch {
@@ -96,6 +98,7 @@ async function sessionReady() {
   return ready;
 }
 export async function flushEvents() {
+  if(STATIC_BUILD) return pagesAnalytics.flushEvents();
   if (!enabled || !queue.length) return;
   if (!(await sessionReady())) return;
   const sending = queue.splice(0, 20);
@@ -118,6 +121,7 @@ export async function flushEvents() {
   if (queue.length > 100) queue.splice(0, queue.length - 100);
 }
 export function track(name, properties = {}, duration) {
+  if(STATIC_BUILD) return pagesAnalytics.track(name,properties);
   if (!enabled) return;
   const event = { id: crypto.randomUUID(), name, properties };
   if (Number.isFinite(duration))
@@ -127,6 +131,7 @@ export function track(name, properties = {}, duration) {
   timer = setTimeout(flushEvents, 400);
 }
 export function setConsent(value) {
+  if(STATIC_BUILD) return pagesAnalytics.setConsent(value);
   try {
     localStorage.setItem(KEY, value);
   } catch {}
@@ -153,7 +158,7 @@ export function setConsent(value) {
   window.dispatchEvent(new CustomEvent("chartsnap-consent", { detail: value }));
 }
 export function initTelemetry() {
-  if(STATIC_BUILD)return;
+  if(STATIC_BUILD)return pagesAnalytics.initTelemetry();
   if (consentState() === "granted") setConsent("granted");
   window.addEventListener("pagehide", flushEvents);
 }

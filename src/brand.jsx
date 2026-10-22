@@ -1,3 +1,4 @@
+import {pagesAnalytics} from './pages-analytics.js';
 import {STATIC_BUILD,sitePath} from './runtime.js';
 import React, { useEffect, useState } from "react";
 import { consentState, setConsent, initTelemetry, track } from "./telemetry.js";
@@ -39,19 +40,21 @@ export function StudioWordmark() {
 }
 export function ConsentBanner() {
   const [state, setState] = useState(consentState());
+  const [configured, configure] = useState(pagesAnalytics?.isConfigured());
   useEffect(() => {
+    const ready = () => configure(true);
+    window.addEventListener("chartsnap-analytics-ready",ready);
     initTelemetry();
     const f = (e) => setState(e.detail);
     window.addEventListener("chartsnap-consent", f);
-    return () => window.removeEventListener("chartsnap-consent", f);
+    return () => {window.removeEventListener("chartsnap-consent", f);window.removeEventListener("chartsnap-analytics-ready",ready);};
   }, []);
-  return !STATIC_BUILD && state === "unset" ? (
+  return (!STATIC_BUILD || configured) && state === "unset" ? (
     <div className="consent-banner" role="region" aria-label="隐私与统计选择">
       <div>
         <strong>由你决定是否帮助我们改进。</strong>
         <p>
-          仅经同意采集匿名操作事件、粗略设备信息及渠道；不采集文件内容、字段名或
-          AI 问题。不启用录屏。
+          {STATIC_BUILD ? "仅经同意向 Umami Cloud 发送页面访问、固定操作事件、粗略设备及渠道。服务商处理 IP 和浏览器信息推算地区与访客数；不发送文件名、数据或图表内容，不加载录屏或 DOM 采集脚本。可随时在隐私设置撤回。" : "仅经同意采集匿名操作事件、粗略设备信息及渠道；不采集文件内容、字段名或 AI 问题。不启用录屏。"}
         </p>
         <a href={sitePath("/privacy")}>查看隐私说明</a>
       </div>
@@ -204,3 +207,5 @@ export function AnonymousSurvey() {
     </details>
   );
 }
+
+export function AnalyticsStatus(){const [status,setStatus]=useState("统计：未启用");useEffect(()=>{const f=e=>setStatus(e.detail);window.addEventListener("chartsnap-analytics-status",f);return ()=>window.removeEventListener("chartsnap-analytics-status",f);},[]);return STATIC_BUILD?<small role="status" aria-label="访问统计状态">{status}</small>:null;}
