@@ -2,7 +2,7 @@ import {test,expect} from '@playwright/test';
 import fs from 'node:fs/promises';
 import * as XLSX from 'xlsx';
 import Papa from 'papaparse';
-const base=process.env.STATIC_TEST?'http://127.0.0.1:5180/chartsnap/':null;
+const base=process.env.STATIC_TEST?(process.env.STATIC_URL||'http://127.0.0.1:5180/chartsnap/'):null;
 const rows=Array.from({length:500},(_,i)=>({X:(i+1)**1.3,Y:3*(i+1)**1.3-7}));
 async function start(page,values=rows,name='experiment.csv'){
   await page.goto(base||'/');
@@ -61,6 +61,6 @@ test('mouse rectangle selects actual marker coordinates rather than viewport zoo
 });
 test('subpath static app has no external or API runtime requests and parses real XLS',async({page})=>{
   test.skip(!process.env.STATIC_TEST,'static deployment only');const external=[],api=[];
-  await page.route('**/*',route=>{const u=route.request().url();if(u.startsWith('http')&&!u.startsWith('http://127.0.0.1:5180/')){external.push(u);return route.abort();}if(u.includes('/api/'))api.push(u);return route.continue();});
+  await page.route('**/*',route=>{const u=route.request().url();if(u.startsWith('http')&&new URL(u).origin!==new URL(base).origin){external.push(u);return route.abort();}if(u.includes('/api/'))api.push(u);return route.continue();});
   const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(rows.slice(0,20)),'实验');await page.goto(base);await page.getByRole('link',{name:'隐私政策',exact:true}).click();await expect(page.getByRole('heading',{name:'ChartSnap 静态版隐私说明',exact:true})).toBeVisible();await page.getByRole('link',{name:'返回绘图工具',exact:true}).click();await page.getByLabel('上传数据文件').setInputFiles({name:'real.xls',mimeType:'application/vnd.ms-excel',buffer:Buffer.from(XLSX.write(wb,{bookType:'biff8',type:'array'}))});await expect(page.getByTestId('chart').locator('svg')).toBeVisible();await expect(page.getByLabel('绘图记录计数')).toContainText('Original: 20 points');await expect(page.getByRole('button',{name:'同意匿名统计'})).toHaveCount(0);expect(external).toEqual([]);expect(api).toEqual([]);await page.screenshot({path:'artifacts/v6-static-desktop.png',fullPage:true});
 });

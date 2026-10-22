@@ -4,7 +4,7 @@ import fs from "node:fs/promises";
 const errors = [];
 test.beforeEach(async ({ page }) => {
   page.on("pageerror", (e) => errors.push(e.message));
-  await page.goto("/");
+  await page.goto(process.env.STATIC_URL||"/");
   await expect(page.getByRole('heading',{name:/Your Data/})).toBeVisible({timeout:20000});
   const privacy=page.getByRole('button',{name:'拒绝可选统计'});if(await privacy.isVisible())await privacy.click();
 });
