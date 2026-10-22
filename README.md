@@ -18,12 +18,12 @@ npm run build:static
 node scripts/serve-static.mjs
 ```
 
-子路径预览：http://127.0.0.1:5180/chartsnap/ 。产物dist-static含index.html、库、CSS、图标和Inter字体，资源为相对路径。静态版没有API、统计、管理后台或模型调用；Excel无需服务器。`.github/workflows/pages.yml`准备Actions部署，站主需在Settings/Pages选择GitHub Actions。预期https://elchasel.github.io/chartsnap/只有实际发布/访问后才算可用。
+子路径预览：http://127.0.0.1:5180/chartsnap/ 。产物dist-static含index.html、库、CSS、图标和Inter字体，资源为相对路径。静态版没有API、统计、管理后台或模型调用；Excel无需服务器。`.github/workflows/pages.yml`准备Actions部署，站主已在Settings/Pages选择GitHub Actions。正式网址https://elchasel.github.io/chartsnap/已发布、HTTPS匿名可用，最终15项公网测试通过；用户本人确认大陆实体手机关闭VPN完整流程可用。
 
 ## 原Sites部署与开发
 
 原站https://chartsnap-studio.super-ash-1449.chatgpt.site/保留；Worker/D1统计和/admin仍只在原站提供。不能将静态版看作后台迁移。开发/迁移/环境变量继续见docs/DEPLOYMENT.md；无需API密钥。`npm run dev`、`npm run build`生成原Sites Worker版本。生产AI_BILLING_AUTHORIZED保持false。
 
-首版30–60秒制图是待真人验证的设计目标，未假称可用性测试已完成。大陆无VPN可达性也必须独立实测。
+首版30–60秒制图是待真人验证的设计目标，未假称可用性测试已完成。用户已完成此次大陆无VPN手机流程实测；不保证所有地区/运营商未来均可达。
 
 审计与开源选择见docs/AUDIT_V6.md，历史4.0交付见docs/DELIVERY_V4.md。更新前恢复标签chartsnap-v4-before-v6，父目录ChartSnap-v4-backup.zip。

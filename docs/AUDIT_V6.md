@@ -35,3 +35,7 @@
 官方 https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site 说明私有仓库Pages取决于账户计划。没有购买计划或自动公开私有仓库。
 
 GitHub Pages预期网址https://elchasel.github.io/chartsnap/ 不等于已经发布，也不能从作者其他站点可访问推断本站所有地区可达。静态子路径/离线资源验收与真实大陆无VPN手机网络验收分开记录。
+
+## 最终状态补充
+
+GitHub授权已生效、仓库由用户设置为public并启用Pages，https://elchasel.github.io/chartsnap/ 已HTTP200，最新main工作流成功发布；最终15项实际Pages浏览器验收通过。用户本人确认大陆实体手机关闭VPN后完整流程可用，不将其推广为所有网络保证。未购买域名、服务器、Pro或AI。

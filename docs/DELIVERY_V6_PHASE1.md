@@ -8,7 +8,9 @@
 
 GitHub：https://github.com/ElChasel/chartsnap 。用户已授予访问，完整133个源码文件已同步；首次完整交付提交edcd5e6233cd6aeb6f768e1d06ef9603490a0a72，后续正确性补丁以main最新提交为准。
 
-GitHub Pages预期https://elchasel.github.io/chartsnap/，截至最终核查该网址HTTP404，不能当作已部署网址。Actions已实际跑通npm ci、84项当时单元测试及静态构建，configure-pages因未启用Pages返回404。当前连接不能管理Pages设置，已请站主在Settings/Pages选择GitHub Actions。仓库初始为private，未擅自公开或购买Pro。
+GitHub Pages正式网址：https://elchasel.github.io/chartsnap/ ，HTTP200、HTTPS、无需登录。用户已在GitHub启用Actions，仓库现为public，未购买Pro。已发布运行39779467895，部署源码493544dfa5780d2bc1ada0ed6cfdf2e359db733c，build和deploy均success；之后仅交付文档更新不改变网站行为。
+
+GitHub Pages最终完整浏览器验收 **15/15通过，0失败、0跳过**。包含6个新核心场景及9个原功能回归。用户本人已在中国大陆实体手机网络、关闭VPN后回复“完整流程可用”：首页→Excel/CSV上传→精确选区→调整→下载PNG。这是此次用户网络的实际结果，不保证所有地区、运营商或未来时段均可用。
 
 恢复点：Git标签chartsnap-v4-before-v6、父目录ChartSnap-v4-backup.zip、旧Sites保存版本6（产品4.0）；新产品版本6.0和Sites内部版本号不是同一个编号。数据库保留。
 
@@ -35,22 +37,22 @@ GitHub Pages预期https://elchasel.github.io/chartsnap/，截至最终核查该�
 - 静态模式拦截所有外网请求后，实际BIFF xls仍可上传绘图；API请求数0。Inter资源随构建输出。
 - 手机390×844模拟视口：上传500条、选择51条、下载PNG成功，scrollWidth390，无页面横向溢出。不是实体iOS/Safari或大陆网络验收。
 - 8组固定seed611样例涵盖20、500、5000不均匀、10000多系列、负数/0、突变、噪声及已知拟合，检查渲染数据均来自真实观测。node scripts/generate-v6-fixtures.mjs可重建CSV。
-- 公网单次：10k XLSX753ms、100k CSV1187ms；本地790ms/2803ms。受网络/缓存/机器影响，不是固定SLA或真人完成任务时间。
+- GitHub Pages最终单次：10k XLSX1296ms、100k CSV2869ms；原Sites公网753ms/1187ms；本地790ms/2803ms。受网络/缓存/机器影响，不是固定SLA或真人完成任务时间。
 - npm审计仍6项high构建依赖链风险、0critical；与4.0已知braces链相关。静态子路径隐私链接及返回首页另外1/1复测通过。构建有source-map/大chunk警告，GitHub Actions有旧action运行时兼容警告；没有声称零风险。
 
 ## 已修复问题
 
-静态Vite8手动拆包配置类型不兼容；新增静态privacy.html抢占原服务器/privacy路由；PNG data URL被CSP阻止fetch；选区与拟合回放使用了不同数据集；非正模型曲线在对数轴静默消失；双轴三系列歧义。均已修复并做相应复验。
+静态Vite8手动拆包配置类型不兼容；新增静态privacy.html抢占原服务器/privacy路由；PNG data URL被CSP阻止fetch；选区与拟合回放使用了不同数据集；非正模型曲线在对数轴静默消失；双轴三系列歧义。均已修复并做相应复验。另发现用户重跑旧提交工作流在新版之后发布，覆盖两个已修复功能；已重新发布当前main，并加入发布前HEAD检查。后续含此检查的工作流会拒绝发布非当前main提交；历史旧工作流本身不含新检查，请只运行最新main工作流，回退应把旧内容作为新提交。
 
 ## 未完成、网络与最少人工步骤
 
-第一阶段仍有GitHub Pages实际启用及大陆无VPN实体手机网络验证的外部步骤；30–60秒首次用户可用性目标尚未真人测试。没有将构建成功或其他GitHub站点可访问冒充这些结果。
+第一阶段核心功能、GitHub Pages独立部署和此次大陆无VPN手机完整流程均已验收。30–60秒首次用户可用性目标尚未做带计时的首次用户测试，不将自动化耗时当作真人完成时间。
 
 第二阶段尚无PDF矢量导出、Excel原生Chart对象、MATLAB.m/.fig或Python脚本；现有数据XLSX导出只是数据，不冒充原生图表。也没有引入Pyodide/付费AI/会员/MATLAB服务。
 
 不提供任意LaTeX排版、全套英文本地化、任意单系列样式独立编辑、复杂坐标或期刊专用合规保证。高级非核心图的部分数值轴配置会明确提示未应用。处理后表的记录索引不承诺对应原工作表物理行号。
 
-站主只需：在GitHub仓库Settings/Pages选择GitHub Actions；若私有仓库计划不支持，告知页面提示，再决定是否公开源码，不必购买服务。待真实网址发布后，在关闭VPN的实体手机网络完成首页→上传→选区→调整→导出验证。发布前不需要域名或服务器付款。
+本阶段没有仍需站主完成的账号或费用步骤。GitHub权限、Pages设置与大陆手机验证均已由用户完成。后续阶段仍按任务书顺序安排，不把未实现格式列为本阶段成果。
 
 ## 交付文件与成本
 

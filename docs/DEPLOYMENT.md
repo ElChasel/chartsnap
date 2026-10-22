@@ -1,3 +1,7 @@
+# 6.0当前部署状态
+
+GitHub Pages已启用，正式网址https://elchasel.github.io/chartsnap/；仓库https://github.com/ElChasel/chartsnap现为public。Actions自动测试、构建及发布，发布前验证提交仍是main HEAD。历史旧工作流无此检查，不应重跑旧提交；回退请将旧内容作为新提交或运行最新main的workflow_dispatch。最终Pages15项测试通过，用户已确认大陆无VPN实体手机完整流程可用。原Sites与后台继续保留。完整记录见DELIVERY_V6_PHASE1.md。下方是早期部署说明与历史状态，以本段为准。
+
 # 6.0静态部署补充
 
 新的静态构建命令为npm run build:static，产物dist-static/index.html，支持/chartsnap/子路径，无API/AI/统计依赖。GitHub授权现已修复，可同步ElChasel/chartsnap；Pages启用与私有仓库账户计划需在GitHub Settings验证。下面保留4.0 Worker部署说明，其GitHub404与旧静态备用页段落仅为历史记录，以本段及AUDIT_V6为准。
