@@ -40,6 +40,11 @@ test('D: independent fit samples survive viewport zoom and plot selection change
   await expect(page.locator('.model-result')).toContainText('样本数 n = 51');await expect(page.locator('.model-result')).toContainText('RMSE');
   await page.getByRole('button',{name:'Advanced',exact:false}).click();await page.getByLabel('X 最小值').fill('1');await page.getByLabel('X 最大值').fill('1000');await expect(page.locator('.model-result')).toContainText('样本数 n = 51');
   await range(page,1,20);await page.getByRole('button',{name:'图表',exact:true}).click();await expect(page.locator('.model-result')).toContainText('样本数 n = 51');await expect(page.getByLabel('绘图记录计数')).toContainText('Selected: 20 points');
+  await page.getByRole('button',{name:'记录',exact:true}).click();
+  const config=await download(page,()=>page.getByRole('button',{name:'导出 JSON',exact:true}).click());
+  await fs.writeFile('artifacts/v6-analysis.json',config);
+  await page.getByLabel('导入分析配置文件').setInputFiles({name:'replay.json',mimeType:'application/json',buffer:config});await page.getByRole('button',{name:'确认重放配置',exact:true}).click();
+  await expect(page.locator('.model-result')).toContainText('样本数 n = 51');await expect(page.getByLabel('绘图记录计数')).toContainText('Selected: 20 points');
 });
 test('table checkboxes, saved intervals, restoration and settings undo are real',async({page})=>{
   await start(page,rows.slice(0,20));await page.getByRole('button',{name:'数据预览',exact:true}).click();await page.getByLabel('选择记录 1',{exact:true}).uncheck();await expect(page.getByLabel('绘图记录计数')).toContainText('Selected: 19 points');
@@ -57,5 +62,5 @@ test('mouse rectangle selects actual marker coordinates rather than viewport zoo
 test('subpath static app has no external or API runtime requests and parses real XLS',async({page})=>{
   test.skip(!process.env.STATIC_TEST,'static deployment only');const external=[],api=[];
   await page.route('**/*',route=>{const u=route.request().url();if(u.startsWith('http')&&!u.startsWith('http://127.0.0.1:5180/')){external.push(u);return route.abort();}if(u.includes('/api/'))api.push(u);return route.continue();});
-  const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(rows.slice(0,20)),'实验');await page.goto(base);await page.getByLabel('上传数据文件').setInputFiles({name:'real.xls',mimeType:'application/vnd.ms-excel',buffer:Buffer.from(XLSX.write(wb,{bookType:'biff8',type:'array'}))});await expect(page.getByTestId('chart').locator('svg')).toBeVisible();await expect(page.getByLabel('绘图记录计数')).toContainText('Original: 20 points');await expect(page.getByRole('button',{name:'同意匿名统计'})).toHaveCount(0);expect(external).toEqual([]);expect(api).toEqual([]);await page.screenshot({path:'artifacts/v6-static-desktop.png',fullPage:true});
+  const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(rows.slice(0,20)),'实验');await page.goto(base);await page.getByRole('link',{name:'隐私政策',exact:true}).click();await expect(page.getByRole('heading',{name:'ChartSnap 静态版隐私说明',exact:true})).toBeVisible();await page.getByRole('link',{name:'返回绘图工具',exact:true}).click();await page.getByLabel('上传数据文件').setInputFiles({name:'real.xls',mimeType:'application/vnd.ms-excel',buffer:Buffer.from(XLSX.write(wb,{bookType:'biff8',type:'array'}))});await expect(page.getByTestId('chart').locator('svg')).toBeVisible();await expect(page.getByLabel('绘图记录计数')).toContainText('Original: 20 points');await expect(page.getByRole('button',{name:'同意匿名统计'})).toHaveCount(0);expect(external).toEqual([]);expect(api).toEqual([]);await page.screenshot({path:'artifacts/v6-static-desktop.png',fullPage:true});
 });

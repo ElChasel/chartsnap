@@ -46,6 +46,7 @@ import { chartOption, formatNumber, palettes } from "./chart.js";
 import "@fontsource-variable/inter";
 import "./style.css";
 import {ALL_SELECTION,PROFESSIONAL_DEFAULTS,selectRecords} from './plot-spec.js';
+import {sitePath} from './runtime.js';
 import {SelectionPanel,ProfessionalControls} from './selection-controls.jsx';
 import {withPngDensity,exportDimensions} from './png-density.js';
 import './professional.css';
@@ -229,7 +230,7 @@ function App() {
       setComparison(null);
     }
   };
-  function undoStyle(redo=false){const h=settingsHistory.current,from=redo?h.future:h.past,to=redo?h.past:h.future;if(!from.length)return;to.push(settings);setSettings(from.pop());setModel(null);}
+  function undoStyle(redo=false){const h=settingsHistory.current,from=redo?h.future:h.past,to=redo?h.past:h.future;if(!from.length)return;to.push(settings);const next=from.pop();setSettings(next);if(['fitSelection','x','y','type','dateFormat'].some(k=>JSON.stringify(next[k])!==JSON.stringify(settings[k])))setModel(null);}
   function createWorker() {
     worker.current = new DataWorker();
     worker.current.onmessage = ({ data: m }) => {
@@ -836,19 +837,18 @@ function App() {
       setModal(null);
       if (config.model?.id && Object.hasOwn(MODEL_REGISTRY, config.model.id)) {
         const pp = pairs(
-          r.rows,
+          selectRecords(r,config.settings.fitSelection,config.settings).rows,
           config.settings.x,
           config.settings.y[0],
           r.columns,
           config.settings.dateFormat,
         );
-        setModel(
-          await run("fit", {
+        const restored=await run("fit", {
             pairs: pp,
             model: config.model.id,
             window: config.model.window || windowSize,
-          }),
-        );
+          });
+        setModel({...restored,sampleCount:pp.length,selection:config.settings.fitSelection,fitRange:[pp.reduce((m,p)=>Math.min(m,p[0]),Infinity),pp.reduce((m,p)=>Math.max(m,p[0]),-Infinity)]});
       }
       setActive("chart");
     });
@@ -1124,7 +1124,7 @@ function App() {
               Made by <StudioWordmark />
             </button>
             <button onClick={() => setConsent("unset")}>隐私设置</button>
-            <a href="/privacy">隐私政策</a>
+            <a href={sitePath('/privacy')}>隐私政策</a>
             <span>© 2026 611 Studio. ChartSnap.</span>
           </footer>
         </div>
@@ -1385,6 +1385,8 @@ function App() {
                     update("yMin", "");
                     update("yMax", "");
                     update("tick", "");
+                    update("xTick", "");
+                    update("viewZoom", null);
                     chart.current?.dispatchAction({ type: "restore" });
                   }}
                 >

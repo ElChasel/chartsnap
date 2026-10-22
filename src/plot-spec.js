@@ -49,6 +49,8 @@ export function validateProfessionalSettings(s){
 export function professionalOption(base,data,s,model=null,figure={width:800,height:500}){
   if(!base.option?.series)return base;
   validateProfessionalSettings(s);
+  if(s.dualY&&(!['line','scatter','area'].includes(s.type)||s.y.length!==2))throw new Error('双Y轴当前要求恰好两个Y系列，并使用折线、散点或面积图；请关闭双轴或调整字段。');
+  if(s.log&&s.showModel!==false&&model?.curve?.some(p=>p[1]<=0))throw new Error('模型曲线包含非正值，不能显示在Y对数轴；请关闭模型曲线或对数轴。');
   const o=base.option,w=[...base.warnings],cartesian=['line','scatter','area','errorbar','bubble'].includes(s.type),dark=s.theme==='Dark';
   o.backgroundColor=dark?'#151c2c':s.background||'#ffffff';
   o.textStyle={...o.textStyle,fontFamily:s.fontFamily||'Arial, Microsoft YaHei, sans-serif',fontSize:s.fontSize};
@@ -108,6 +110,7 @@ export function professionalOption(base,data,s,model=null,figure={width:800,heig
     o.grid={left:90,top:80,width,height,containLabel:false};
   }
   if(s.viewZoom&&o.dataZoom)o.dataZoom=o.dataZoom.map(z=>({...z,start:s.viewZoom.start,end:s.viewZoom.end}));
+  if(data.recordIndices?.some((n,i,a)=>i>0&&n!==a[i-1]+1)&&s.type!=='scatter')w.push('非连续选区的折线按实际X连接所选端点；如不希望跨排除区间连线，请关闭连接线。');
   w.push('缩放仅改变可见范围；绘图选区和拟合选区独立保存。');
   return {...base,option:o,warnings:[...new Set(w)]};
 }
