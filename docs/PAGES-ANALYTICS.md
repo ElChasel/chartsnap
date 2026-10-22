@@ -78,5 +78,7 @@ Dashboard 日期选择 Today、Last 7 days、Last 30 days；按日查看 Views /
 - 正式网站于北京时间22:22左右完成真实验收，非模拟接口：2个PV、studio_opened、file_upload_succeeded、chart_generated、data_range_adjusted(scope=plot)、chart_exported(format=png)、chart_exported(format=svg)，共8条请求全部HTTP200并返回cache/sessionId/visitId。下载成功、无页面运行错误。渠道标签other_campaign（验收链接utm_source=release_validation），初始少量数据包含验收流量，不应解读为自然获客。
 - 本地93项单元测试、15项原有浏览器功能场景与2项新增隐私/故障隔离场景分别验证通过；Edge在连续启动新context时偶发退出，单独运行故障场景通过。范围调整与撤回同意后停止采集已验证。
 - 未登录访问具体后台地址会跳转到Umami Cloud官方登录页，未创建公共分享。
-- HTTP采集成功不等于已读取私有报表：已请站主登录确认数据和保存漏斗。大陆实体手机网络的新采集链路也已请求站主确认，开发环境不能替代该测试。当前不声称这两项已验收。
+- 站主于2026-10-22本人登录Umami私有Dashboard，确认已看到真实数据，并已保存“首页到图表导出”漏斗。此项为站主确认，开发者未访问其私有账号。
+- 站主使用中国大陆实体手机网络、关闭VPN，确认页面显示“采集接口已接收”，上传测试CSV、绘图及导出正常。此项为该次实体网络的用户实测结果，不代表所有地区、运营商或未来网络始终可达。
+- 私有后台数据展示、漏斗保存与大陆实体网络三项验收均已由站主确认完成；无需额外账号授权或密钥。
 - 未购买、升级或配置付费服务。保留Hobby账户，不开启试用或付款。
