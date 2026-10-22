@@ -18,11 +18,11 @@ npm run build:static
 node scripts/serve-static.mjs
 ```
 
-子路径预览：http://127.0.0.1:5180/chartsnap/ 。产物dist-static含index.html、库、CSS、图标和Inter字体，资源为相对路径。静态版没有API、统计、管理后台或模型调用；Excel无需服务器。`.github/workflows/pages.yml`准备Actions部署，站主已在Settings/Pages选择GitHub Actions。正式网址https://elchasel.github.io/chartsnap/已发布、HTTPS匿名可用，最终15项公网测试通过；用户本人确认大陆实体手机关闭VPN完整流程可用。
+子路径预览：http://127.0.0.1:5180/chartsnap/ 。产物dist-static含index.html、库、CSS、图标和Inter字体，资源为相对路径。静态版没有业务后端或模型调用；Excel仍在本地解析。可选访问统计使用独立的Umami Cloud私有后台，明确同意后才发送固定事件，不加载第三方脚本、不采集文件或图表。使用与隐私边界见[网站运营统计说明](docs/PAGES-ANALYTICS.md)。`.github/workflows/pages.yml`准备Actions部署，站主已在Settings/Pages选择GitHub Actions。正式网址https://elchasel.github.io/chartsnap/已发布、HTTPS匿名可用，最终15项公网测试通过；用户本人确认大陆实体手机关闭VPN完整流程可用。
 
 ## 原Sites部署与开发
 
-原站https://chartsnap-studio.super-ash-1449.chatgpt.site/保留；Worker/D1统计和/admin仍只在原站提供。不能将静态版看作后台迁移。开发/迁移/环境变量继续见docs/DEPLOYMENT.md；无需API密钥。`npm run dev`、`npm run build`生成原Sites Worker版本。生产AI_BILLING_AUTHORIZED保持false。
+原站https://chartsnap-studio.super-ash-1449.chatgpt.site/保留；Worker/D1统计和/admin仍只代表原站，不能作为GitHub Pages的访问量。新版Pages统计只进入Umami项目，与旧后台隔离。开发/迁移/环境变量继续见docs/DEPLOYMENT.md；无需API密钥。`npm run dev`、`npm run build`生成原Sites Worker版本。生产AI_BILLING_AUTHORIZED保持false。
 
 首版30–60秒制图是待真人验证的设计目标，未假称可用性测试已完成。用户已完成此次大陆无VPN手机流程实测；不保证所有地区/运营商未来均可达。
 

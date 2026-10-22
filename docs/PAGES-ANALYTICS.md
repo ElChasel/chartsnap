@@ -70,3 +70,13 @@ Dashboard 日期选择 Today、Last 7 days、Last 30 days；按日查看 Views /
 - https://developers.cloudflare.com/web-analytics/faq/
 - https://learn.microsoft.com/en-gb/clarity/session-recordings/recordings-overview
 - https://www.goatcounter.com/
+
+## 发布验收记录（2026-10-22）
+
+- 源码提交：ab81ac08e9ec4330805211288b3a4435c136d2f3。
+- GitHub Pages工作流：https://github.com/ElChasel/chartsnap/actions/runs/39793577118 。生产构建与93项单元测试成功，发布日志于14:21:17 UTC报告Reported success；公网首页已返回同一构建的standalone-CzNNfXtK.js和新CSP。
+- 正式网站于北京时间22:22左右完成真实验收，非模拟接口：2个PV、studio_opened、file_upload_succeeded、chart_generated、data_range_adjusted(scope=plot)、chart_exported(format=png)、chart_exported(format=svg)，共8条请求全部HTTP200并返回cache/sessionId/visitId。下载成功、无页面运行错误。渠道标签other_campaign（验收链接utm_source=release_validation），初始少量数据包含验收流量，不应解读为自然获客。
+- 本地93项单元测试、15项原有浏览器功能场景与2项新增隐私/故障隔离场景分别验证通过；Edge在连续启动新context时偶发退出，单独运行故障场景通过。范围调整与撤回同意后停止采集已验证。
+- 未登录访问具体后台地址会跳转到Umami Cloud官方登录页，未创建公共分享。
+- HTTP采集成功不等于已读取私有报表：已请站主登录确认数据和保存漏斗。大陆实体手机网络的新采集链路也已请求站主确认，开发环境不能替代该测试。当前不声称这两项已验收。
+- 未购买、升级或配置付费服务。保留Hobby账户，不开启试用或付款。
