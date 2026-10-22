@@ -1,0 +1,4 @@
+ADMIN_EMAILS=seedy@sites.test
+ANALYTICS_SECRET=replace-with-random-local-development-secret
+AI_BILLING_AUTHORIZED=false
+ANALYTICS_DAILY_LIMIT=20000
